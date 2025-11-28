@@ -9,6 +9,22 @@ function blinkGreen() {
 echo(false);
 setWatch(blinkGreen, BTN, { edge: "rising", repeat: true, debounce: 50 });
 
+// Send configuration on Bluetooth connect
+NRF.on('connect', function(addr) {
+    var config = {
+        deviceName: "Puck Player 1",
+        version: "1.0",
+        capabilities: ["button", "led", "timer"],
+        settings: {
+            debounceTime: 50,
+            blinkDuration: 100
+        }
+    };
+    
+    Bluetooth.println(JSON.stringify(config));
+    print("Config sent to " + addr);
+});
+
 // Transmit Bluetooth Low Energy advertising packets
 NRF.setAdvertising({}, {
     showName: false,
