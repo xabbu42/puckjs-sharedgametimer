@@ -1,4 +1,5 @@
 var DEVICE_NAME = "Puck.js";
+var PLAYER_COLOR = "Blue";
 var LONG_PRESS_TIME = 1000; // 1 second for long press
 var DOUBLE_CLICK_TIME = 300; // 300ms window for double click
 
@@ -38,13 +39,15 @@ var sgtPlayerTime = 0;
 var incompleteLineRead = '';
 var lastReadLine = '';
 
+var colors = {Blue: "486bfa", Red: "dd3b34", Yellow:"fdff53", Green: "6fc950", Purple:"pl;7d21f9"};
+
 // Handle timer state updates
 function handleStateUpdate(stateLine) {
 	if (stateLine === "GET SETUP") {
 		Bluetooth.println(JSON.stringify(suggestions));
 		return;
 	} else {
-		active = stateLine.endsWith(";486bfa");
+		active = stateLine.endsWith(colors[PLAYER_COLOR]);
 		LED2.write(active && stateLine.startsWith("pl;"));
 	}
 }
@@ -144,7 +147,7 @@ NRF.on('connect', function(addr) {
 
 // Transmit Bluetooth Low Energy advertising packets
 NRF.setAdvertising({}, {
-	showName: false,
+	showName: true,
+	name: DEVICE_NAME + " " + PLAYER_COLOR,
 	manufacturer: 0x0590,
-	manufacturerData: JSON.stringify({ name: "Puck Player 1" })
 });
