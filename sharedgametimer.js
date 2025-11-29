@@ -6,27 +6,28 @@ var suggestions = {
     // scriptName: "Pill Button Write",
     // defaultTriggers: ["includePlayers","includePause","includeAdmin","includeSimultaneousTurns","includeGameStart","includeGameEnd","includeSandTimerStart","includeSandTimerReset","includeSandTimerStop","includeSandTimerOutOfTime","runOnStateChange","runOnPlayerOrderChange","runOnPoll","runOnBluetoothConnect","runOnBluetoothDisconnect"],
     actionMap: [
-        ['Single', 'remoteActionPrimary'],
-        ['Double', 'remoteActionToggleAdmin'],
-        ['Long', 'remoteActionSecondary'],
-        ['TurnUpside', 'remoteActionTogglePause'],
-        ['TurnRightside', 'remoteActionTogglePause'],
-        ['Shake', 'remoteActionUndo'],
+        ['Single',  'remoteActionPrimary'],
+        ['Double',  'remoteActionToggleAdmin'],
+        ['Long',    'remoteActionSecondary'],
+        ['Up',      'remoteActionTogglePause'],
+        ['Down',    'remoteActionTogglePause'],
+        ['Shake',   'remoteActionUndo'],
         ['Connect', 'remoteActionPoll']
     ],
     actionMapName: DEVICE_NAME + " Actions"
 };
 
-// Blink green for 100ms
-function blinkGreen() {
-	LED2.write(true);
-	setTimeout(function () { LED2.write(false); }, 100);
-	print("pressed");
-}
+function single()  { print('Single' ) }
+function double()  { print('Double' ) }
+function long()    { print('Long'   ) }
+function up()      { print('Up'     ) }
+function down()    { print('Down'   ) }
+function shake()   { print('Shake'  ) }
+function connect() { print('Connect') }
 
 // Detect button press and blink green
 echo(false);
-setWatch(blinkGreen, BTN, { edge: "rising", repeat: true, debounce: 50 });
+setWatch(single, BTN, { edge: "rising", repeat: true, debounce: 50 });
 
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
