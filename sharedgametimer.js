@@ -3,11 +3,11 @@ var LONG_PRESS_TIME = 1000; // 1 second for long press
 var DOUBLE_CLICK_TIME = 300; // 300ms window for double click
 
 var suggestions = {
-	// script: [
-	//     '0 sgtState;sgtColor;sgtTurnTime;sgtPlayerTime%0A'
-	// ],
-	// scriptName: "Pill Button Write",
-	// defaultTriggers: ["includePlayers","includePause","includeAdmin","includeSimultaneousTurns","includeGameStart","includeGameEnd","includeSandTimerStart","includeSandTimerReset","includeSandTimerStop","includeSandTimerOutOfTime","runOnStateChange","runOnPlayerOrderChange","runOnPoll","runOnBluetoothConnect","runOnBluetoothDisconnect"],
+	script: [
+	    '0 sgtState;sgtColor;sgtTurnTime;sgtPlayerTime%0A'
+	],
+	scriptName: DEVICE_NAME + " Write",
+	defaultTriggers: ["includePlayers","includePause","includeAdmin","includeSimultaneousTurns","includeGameStart","includeGameEnd","includeSandTimerStart","includeSandTimerReset","includeSandTimerStop","includeSandTimerOutOfTime","runOnStateChange","runOnPlayerOrderChange","runOnPoll","runOnBluetoothConnect","runOnBluetoothDisconnect"],
 	actionMap: [
 		['Single',  'remoteActionPrimary'],
 		['Double',  'remoteActionToggleAdmin'],
@@ -20,13 +20,13 @@ var suggestions = {
 	actionMapName: DEVICE_NAME + " Actions"
 };
 
-function single()  { print('Single' ) }
-function double()  { print('Double' ) }
-function long()    { print('Long'   ) }
-function up()      { print('Up'     ) }
-function down()    { print('Down'   ) }
-function shake()   { print('Shake'  ) }
-function connect() { print('Connect') }
+function single()  { Bluetooth.println('Single' ) }
+function double()  { Bluetooth.println('Double' ) }
+function long()    { Bluetooth.println('Long'   ) }
+function up()      { Bluetooth.println('Up'     ) }
+function down()    { Bluetooth.println('Down'   ) }
+function shake()   { Bluetooth.println('Shake'  ) }
+function connect() { Bluetooth.println('Connect') }
 
 // Timer state variables
 var sgtState = 'nc'; // not connected
@@ -39,8 +39,7 @@ var lastReadLine = '';
 // Handle timer state updates
 function handleStateUpdate(stateLine) {
 	if (stateLine === "GET SETUP") {
-		print(JSON.stringify(suggestions));
-		print("Connected");
+		Bluetooth.println(JSON.stringify(suggestions));
 		return;
 	}
 
@@ -100,8 +99,6 @@ function readState(data) {
 		incompleteLineRead = lastItem;
 	}
 }
-
-echo(false);
 
 // Button press detection variables
 var pressTimer;
@@ -171,8 +168,15 @@ Bluetooth.on('data', readState);
 
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
-	print(JSON.stringify(suggestions));
-	connect();
+	// TODO find a better way to access console
+	if (addr == "2c:ca:16:42:3d:62 public") {
+		Bluetooth.setConsole();
+	} else {
+		echo(false);
+		LoopbackA.setConsole();
+		Bluetooth.println(JSON.stringify(suggestions));
+		connect();
+	}
 });
 
 // Transmit Bluetooth Low Energy advertising packets
