@@ -135,7 +135,6 @@ NRF.on('connect', function(addr) {
 	if (addr == "2c:ca:16:42:3d:62 public") {
 		Bluetooth.setConsole();
 	} else {
-		echo(false);
 		LoopbackA.setConsole();
 		Bluetooth.println(JSON.stringify(suggestions));
 		connect();
