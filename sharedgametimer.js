@@ -28,6 +28,79 @@ function down()    { print('Down'   ) }
 function shake()   { print('Shake'  ) }
 function connect() { print('Connect') }
 
+// Timer state variables
+var sgtState = 'nc'; // not connected
+var sgtColor = null;
+var sgtTurnTime = 0;
+var sgtPlayerTime = 0;
+var incompleteLineRead = '';
+var lastReadLine = '';
+
+// Handle timer state updates
+function handleStateUpdate(stateLine) {
+	if (stateLine === "GET SETUP") {
+		print(JSON.stringify(suggestions));
+		print("Connected");
+		return;
+	}
+
+	if (lastReadLine === stateLine) {
+		return; // Ignore duplicate lines
+	}
+
+	lastReadLine = stateLine;
+
+	var parts = stateLine.split(";");
+	if (parts.length >= 4) {
+		var newSgtState = parts[0].trim();
+		var colorHex = parts[1].trim();
+		var tmpTurnTime = parts[2].trim();
+		var tmpPlayerTime = parts[3].trim();
+
+		sgtTurnTime = tmpTurnTime.length > 0 ? parseInt(tmpTurnTime) : 0;
+		sgtPlayerTime = tmpPlayerTime.length > 0 ? parseInt(tmpPlayerTime) : 0;
+
+		var newSgtColor = null;
+		if (colorHex.length === 6) {
+			newSgtColor = [
+				parseInt(colorHex.substr(0, 2), 16),
+				parseInt(colorHex.substr(2, 2), 16),
+				parseInt(colorHex.substr(4, 2), 16)
+			];
+		}
+
+		var requireUpdate = newSgtState !== sgtState || JSON.stringify(newSgtColor) !== JSON.stringify(sgtColor);
+		sgtState = newSgtState;
+		sgtColor = newSgtColor;
+
+		if (requireUpdate) {
+			updateLEDForState();
+		}
+	}
+}
+
+// Update LED based on current state
+function updateLEDForState() {
+	//print("State: " + sgtState + ", Color: " + JSON.stringify(sgtColor));
+	// TODO: Implement LED animations based on state
+}
+
+// Read from UART and process timer state
+function readState(data) {
+	digitalPulse(LED2, true, 200);
+	var lines = (incompleteLineRead + data).split("\n");
+	if (lines.length === 0) return;
+	var lastItem = lines.pop();
+	if (lastItem === '') {
+		if (lines.length > 0) {
+			incompleteLineRead = '';
+			handleStateUpdate(lines.pop());
+		}
+	} else {
+		incompleteLineRead = lastItem;
+	}
+}
+
 echo(false);
 
 // Button press detection variables
@@ -94,9 +167,12 @@ setWatch(function() {
 
 }, BTN, {edge:"falling", debounce:25, repeat:true});
 
+Bluetooth.on('data', readState);
+
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
 	print(JSON.stringify(suggestions));
+	connect();
 });
 
 // Transmit Bluetooth Low Energy advertising packets
