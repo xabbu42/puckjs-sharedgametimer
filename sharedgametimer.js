@@ -20,9 +20,11 @@ var suggestions = {
 	actionMapName: DEVICE_NAME + " Actions"
 };
 
-function single()  { Bluetooth.println('Single' ) }
+var active = false;
+
+function single()  { if (active) Bluetooth.println('Single' ) }
+function long()    { if (active) Bluetooth.println('Long'   ) }
 function double()  { Bluetooth.println('Double' ) }
-function long()    { Bluetooth.println('Long'   ) }
 function up()      { Bluetooth.println('Up'     ) }
 function down()    { Bluetooth.println('Down'   ) }
 function shake()   { Bluetooth.println('Shake'  ) }
@@ -41,10 +43,9 @@ function handleStateUpdate(stateLine) {
 	if (stateLine === "GET SETUP") {
 		Bluetooth.println(JSON.stringify(suggestions));
 		return;
-	} else if (stateLine === "pl;486bfa") {
-		LED2.set();
 	} else {
-		LED2.reset();
+		active = stateLine.endsWith(";486bfa");
+		LED2.write(active && stateLine.startsWith("pl;"));
 	}
 }
 
