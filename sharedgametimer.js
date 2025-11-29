@@ -56,7 +56,7 @@ setWatch(function() {
 		}
 	}, LONG_PRESS_TIME);
 
-}, BTN, {edge:"falling", debounce:50, repeat:true});
+}, BTN, {edge:"rising", debounce:25, repeat:true});
 
 // Button released
 setWatch(function() {
@@ -92,7 +92,7 @@ setWatch(function() {
 		}, DOUBLE_CLICK_TIME);
 	}
 
-}, BTN, {edge:"rising", debounce:50, repeat:true});
+}, BTN, {edge:"falling", debounce:25, repeat:true});
 
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
