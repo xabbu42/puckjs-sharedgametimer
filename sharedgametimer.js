@@ -1,18 +1,20 @@
+var DEVICE_NAME = "Puck.js";
 var suggestions = {
-    script: [
-        '0 sgtState;sgtColor;sgtTurnTime;sgtPlayerTime%0A'
-    ],
-    scriptName: "Pill Button Write",
-    defaultTriggers: ["includePlayers","includePause","includeAdmin","includeSimultaneousTurns","includeGameStart","includeGameEnd","includeSandTimerStart","includeSandTimerReset","includeSandTimerStop","includeSandTimerOutOfTime","runOnStateChange","runOnPlayerOrderChange","runOnPoll","runOnBluetoothConnect","runOnBluetoothDisconnect"],
+    // script: [
+    //     '0 sgtState;sgtColor;sgtTurnTime;sgtPlayerTime%0A'
+    // ],
+    // scriptName: "Pill Button Write",
+    // defaultTriggers: ["includePlayers","includePause","includeAdmin","includeSimultaneousTurns","includeGameStart","includeGameEnd","includeSandTimerStart","includeSandTimerReset","includeSandTimerStop","includeSandTimerOutOfTime","runOnStateChange","runOnPlayerOrderChange","runOnPoll","runOnBluetoothConnect","runOnBluetoothDisconnect"],
     actionMap: [
-        ['Short Press 1', 'remoteActionPrimary'],
-        ['Short Press 2', 'remoteActionToggleAdmin'],
-        ['Long Press 0', 'remoteActionSecondary'],
-        ['Long Press 1', 'remoteActionTogglePause'],
-        ['Long Press', 'remoteActionUndo'],
-        ['Connected', 'remoteActionPoll']
+        ['Single', 'remoteActionPrimary'],
+        ['Double', 'remoteActionToggleAdmin'],
+        ['Long', 'remoteActionSecondary'],
+        ['TurnUpside', 'remoteActionTogglePause'],
+        ['TurnRightside', 'remoteActionTogglePause'],
+        ['Shake', 'remoteActionUndo'],
+        ['Connect', 'remoteActionPoll']
     ],
-    actionMapName: "Pill Button Actions"
+    actionMapName: DEVICE_NAME + " Actions"
 };
 
 // Blink green for 100ms
