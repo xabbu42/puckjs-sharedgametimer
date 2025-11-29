@@ -11,17 +11,24 @@ setWatch(blinkGreen, BTN, { edge: "rising", repeat: true, debounce: 50 });
 
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
-    var config = {
-        deviceName: "Puck Player 1",
-        version: "1.0",
-        capabilities: ["button", "led", "timer"],
-        settings: {
-            debounceTime: 50,
-            blinkDuration: 100
-        }
+    var suggestions = {
+        script: [
+            '0 sgtState;sgtColor;sgtTurnTime;sgtPlayerTime%0A'
+        ],
+        scriptName: "Pill Button Write",
+        defaultTriggers: ["includePlayers","includePause","includeAdmin","includeSimultaneousTurns","includeGameStart","includeGameEnd","includeSandTimerStart","includeSandTimerReset","includeSandTimerStop","includeSandTimerOutOfTime","runOnStateChange","runOnPlayerOrderChange","runOnPoll","runOnBluetoothConnect","runOnBluetoothDisconnect"],
+        actionMap: [
+            ['Short Press 1', 'remoteActionPrimary'],
+            ['Short Press 2', 'remoteActionToggleAdmin'],
+            ['Long Press 0', 'remoteActionSecondary'],
+            ['Long Press 1', 'remoteActionTogglePause'],
+            ['Long Press', 'remoteActionUndo'],
+            ['Connected', 'remoteActionPoll']
+        ],
+        actionMapName: "Pill Button Actions"
     };
     
-    Bluetooth.println(JSON.stringify(config));
+    Bluetooth.println(JSON.stringify(suggestions));
     print("Config sent to " + addr);
 });
 
