@@ -32,10 +32,6 @@ function shake()   { Bluetooth.println('Shake'  ) }
 function connect() { Bluetooth.println('Connect') }
 
 // Timer state variables
-var sgtState = 'nc'; // not connected
-var sgtColor = null;
-var sgtTurnTime = 0;
-var sgtPlayerTime = 0;
 var incompleteLineRead = '';
 var lastReadLine = '';
 
