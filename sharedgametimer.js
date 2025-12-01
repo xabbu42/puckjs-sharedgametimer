@@ -141,6 +141,12 @@ NRF.on('connect', function(addr) {
 	}
 });
 
+NRF.on('disconnect', function() {
+	LED1.reset();
+	LED2.reset();
+	LED3.reset();
+});
+
 // Transmit Bluetooth Low Energy advertising packets
 NRF.setAdvertising({}, {
 	showName: true,
