@@ -1,11 +1,11 @@
 var DEVICE_NAME = "Puck.js";
-var PLAYER_COLOR = "Blue";
+var PLAYER_SEAT = "1";
 var LONG_PRESS_TIME = 1000; // 1 second for long press
 var DOUBLE_CLICK_TIME = 300; // 300ms window for double click
 
 var suggestions = {
 	script: [
-	    '0 sgtState;sgtColor%0A'
+	    '0 sgtState;sgtSeat;sgtPlayerSeats;sgtPlayerActions%0A'
 	],
 	scriptName: DEVICE_NAME + " Write",
 	defaultTriggers: ["includePlayers","includePause","includeAdmin","includeSimultaneousTurns","includeGameStart","includeGameEnd","includeSandTimerStart","includeSandTimerReset","includeSandTimerStop","includeSandTimerOutOfTime","runOnStateChange","runOnPlayerOrderChange","runOnPoll","runOnBluetoothConnect","runOnBluetoothDisconnect"],
@@ -21,10 +21,8 @@ var suggestions = {
 	actionMapName: DEVICE_NAME + " Actions"
 };
 
-var active = false;
-
-function single()  { if (active) Bluetooth.println('Single' ) }
-function long()    { if (active) Bluetooth.println('Long'   ) }
+function single()  { Bluetooth.println('Single' ) }
+function long()    { Bluetooth.println('Long'   ) }
 function double()  { Bluetooth.println('Double' ) }
 function up()      { Bluetooth.println('Up'     ) }
 function down()    { Bluetooth.println('Down'   ) }
@@ -35,16 +33,21 @@ function connect() { Bluetooth.println('Connect') }
 var incompleteLineRead = '';
 var lastReadLine = '';
 
-var colors = {Blue: "486bfa", Red: "dd3b34", Yellow:"fdff53", Green: "6fc950", Purple:"pl;7d21f9"};
-
 // Handle timer state updates
 function handleStateUpdate(stateLine) {
 	if (stateLine === "GET SETUP") {
 		Bluetooth.println(JSON.stringify(suggestions));
 		return;
 	} else {
-		active = stateLine.endsWith(colors[PLAYER_COLOR]);
-		LED2.write(active && stateLine.startsWith("pl;"));
+		var parts = stateLine.split(";");
+		var state = parts[0];
+		var seat = parts[1];
+		var seats = parts[2].split(",");
+		var actions = parts[3].split(",");
+
+		var index = seats.indexOf(PLAYER_SEAT);
+		LED3.write(actions[index] != "");
+		LED2.write(state == "pl" && seat == PLAYER_SEAT);
 	}
 }
 
@@ -150,6 +153,6 @@ NRF.on('disconnect', function() {
 // Transmit Bluetooth Low Energy advertising packets
 NRF.setAdvertising({}, {
 	showName: true,
-	name: DEVICE_NAME + " " + PLAYER_COLOR,
+	name: DEVICE_NAME + " " + PLAYER_SEAT,
 	manufacturer: 0x0590,
 });
