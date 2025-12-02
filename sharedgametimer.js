@@ -16,7 +16,7 @@ var suggestions = {
 		['Up',      'remoteActionTogglePause'],
 		['Down',    'remoteActionTogglePause'],
 		['Shake',   'remoteActionUndo'],
-		['Connect', 'remoteActionPoll']
+		['Poll',    'remoteActionPoll']
 	],
 	actionMapName: DEVICE_NAME + " Actions"
 };
@@ -27,7 +27,7 @@ function double()  { Bluetooth.println('Double' ) }
 function up()      { Bluetooth.println('Up'     ) }
 function down()    { Bluetooth.println('Down'   ) }
 function shake()   { Bluetooth.println('Shake'  ) }
-function connect() { Bluetooth.println('Connect') }
+function poll()    { Bluetooth.println('Poll'   ) }
 
 // Handle state updates
 function handleStateUpdate(stateLine) {
@@ -135,7 +135,7 @@ Bluetooth.on('data', readState);
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
 		LoopbackA.setConsole();
-		connect();
+		poll();
 });
 
 NRF.on('disconnect', function() {
