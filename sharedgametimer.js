@@ -134,8 +134,8 @@ Bluetooth.on('data', readState);
 
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
-		LoopbackA.setConsole();
-		poll();
+	LoopbackA.setConsole();
+	poll();
 });
 
 NRF.on('disconnect', function() {
