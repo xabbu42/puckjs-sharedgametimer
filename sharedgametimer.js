@@ -146,10 +146,3 @@ NRF.on('disconnect', function() {
 	LED2.reset();
 	LED3.reset();
 });
-
-// Transmit Bluetooth Low Energy advertising packets
-NRF.setAdvertising({}, {
-	showName: true,
-	name: DEVICE_NAME + " " + PLAYER_SEAT,
-	manufacturer: 0x0590,
-});
