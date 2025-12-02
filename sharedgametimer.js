@@ -61,6 +61,9 @@ function readState(data) {
 	} else {
 		incompleteLineRead = lastItem;
 	}
+	if (incompleteLineRead == "\u0003") {
+		Bluetooth.setConsole();
+	}
 }
 
 // Button press detection variables
@@ -131,14 +134,8 @@ Bluetooth.on('data', readState);
 
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
-	// TODO find a better way to access console
-	if (addr == "2c:ca:16:42:3d:62 public") {
-		Bluetooth.setConsole();
-	} else {
 		LoopbackA.setConsole();
-		Bluetooth.println(JSON.stringify(suggestions));
 		connect();
-	}
 });
 
 NRF.on('disconnect', function() {
