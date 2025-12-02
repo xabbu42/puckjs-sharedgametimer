@@ -29,11 +29,7 @@ function down()    { Bluetooth.println('Down'   ) }
 function shake()   { Bluetooth.println('Shake'  ) }
 function connect() { Bluetooth.println('Connect') }
 
-// Timer state variables
-var incompleteLineRead = '';
-var lastReadLine = '';
-
-// Handle timer state updates
+// Handle state updates
 function handleStateUpdate(stateLine) {
 	if (stateLine === "GET SETUP") {
 		Bluetooth.println(JSON.stringify(suggestions));
@@ -51,7 +47,8 @@ function handleStateUpdate(stateLine) {
 	}
 }
 
-// Read from UART and process timer state
+// Read from UART and process state
+var incompleteLineRead = '';
 function readState(data) {
 	var lines = (incompleteLineRead + data).split("\n");
 	if (lines.length === 0) return;
