@@ -1,5 +1,3 @@
-var DEVICE_NAME = "Puck.js";
-var PLAYER_SEAT = "1";
 var LONG_PRESS_TIME = 1000; // 1 second for long press
 var DOUBLE_CLICK_TIME = 300; // 300ms window for double click
 
@@ -7,7 +5,7 @@ var suggestions = {
 	script: [
 	    '0 sgtState;sgtSeat;sgtPlayerSeats;sgtPlayerActions%0A'
 	],
-	scriptName: DEVICE_NAME + " Write",
+	scriptName: "Puck.js Write",
 	defaultTriggers: ["includePlayers","includePause","includeAdmin","includeSimultaneousTurns","includeGameStart","includeGameEnd","includeSandTimerStart","includeSandTimerReset","includeSandTimerStop","includeSandTimerOutOfTime","runOnStateChange","runOnPlayerOrderChange","runOnPoll","runOnBluetoothConnect","runOnBluetoothDisconnect"],
 	actionMap: [
 		['Single',  'remoteActionPrimary'],
@@ -18,7 +16,7 @@ var suggestions = {
 		['Shake',   'remoteActionUndo'],
 		['Poll',    'remoteActionPoll']
 	],
-	actionMapName: DEVICE_NAME + " Actions"
+	actionMapName: "Puck.js Actions"
 };
 
 function single()  { Bluetooth.println('Single' ) }
