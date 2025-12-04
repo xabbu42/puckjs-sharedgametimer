@@ -1,6 +1,8 @@
 var LONG_PRESS_TIME = 1000; // 1 second for long press
 var DOUBLE_CLICK_TIME = 300; // 300ms window for double click
 var ORIENTATION_THRESHOLD = 10000; // Threshold for Z-axis to determine orientation
+var SHAKE_THRESHOLD = 50000; // Threshold for detecting shake motion
+var SHAKE_COOLDOWN = 1000; // Minimum time between shake detections (ms)
 
 var suggestions = {
 	script: [
@@ -75,6 +77,10 @@ var pressStartTime = 0;
 // Orientation detection variables
 var currentOrientation = null; // null, 'up', or 'down'
 
+// Shake detection variables
+var lastAccel = {x: 0, y: 0, z: 0};
+var lastShakeTime = 0;
+
 // Button pressed down
 setWatch(function() {
 	isPressed = true;
@@ -133,11 +139,32 @@ setWatch(function() {
 }, BTN, {edge:"falling", debounce:25, repeat:true});
 
 // Orientation detection using accelerometer
+deltaLog = [];
 function checkOrientation(measure) {
+	var acc = measure.acc;
+	var currentTime = getTime() * 1000; // Convert to milliseconds
+
+	// Check for shake detection
+	var deltaX = Math.abs(acc.x - lastAccel.x);
+	var deltaY = Math.abs(acc.y - lastAccel.y);
+	var deltaZ = Math.abs(acc.z - lastAccel.z);
+	var totalDelta = deltaX + deltaY + deltaZ;
+
+	if (totalDelta > SHAKE_THRESHOLD && (currentTime - lastShakeTime) > SHAKE_COOLDOWN) {
+		deltaLog.push({deltaX,deltaY,deltaZ});
+		shake();
+		lastShakeTime = currentTime;
+		digitalPulse(LED1, 1, 1000);
+	}
+
+	// Store current acceleration for next comparison
+	lastAccel = {x: acc.x, y: acc.y, z: acc.z};
+
+	// Check orientation
 	var newOrientation = null;
-	if (measure.acc.z > ORIENTATION_THRESHOLD) {
+	if (acc.z > ORIENTATION_THRESHOLD) {
 		newOrientation = 'up'; // Right side up
-	} else if (measure.acc.z < -ORIENTATION_THRESHOLD) {
+	} else if (acc.z < -ORIENTATION_THRESHOLD) {
 		newOrientation = 'down'; // Upside down
 	}
 
@@ -146,16 +173,16 @@ function checkOrientation(measure) {
 		currentOrientation = newOrientation;
 		if (newOrientation === 'up') {
 			up();
-			LED1.reset();
+			//LED1.reset();
 		} else if (newOrientation === 'down') {
 			down();
-			LED1.set();
+			//LED1.set();
 		}
 	}
 }
 
 // Check orientation
-require("puckjsv2-accel-tilt").on();
+require("puckjsv2-accel-movement").on();
 Puck.on('accel', checkOrientation);
 
 Bluetooth.on('data', readState);
