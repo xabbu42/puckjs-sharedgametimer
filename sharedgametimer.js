@@ -1,5 +1,6 @@
 var LONG_PRESS_TIME = 1000; // 1 second for long press
 var DOUBLE_CLICK_TIME = 300; // 300ms window for double click
+var ORIENTATION_THRESHOLD = 10000; // Threshold for Z-axis to determine orientation
 
 var suggestions = {
 	script: [
@@ -71,6 +72,9 @@ var pressCount = 0;
 var isPressed = false;
 var pressStartTime = 0;
 
+// Orientation detection variables
+var currentOrientation = null; // null, 'up', or 'down'
+
 // Button pressed down
 setWatch(function() {
 	isPressed = true;
@@ -127,6 +131,32 @@ setWatch(function() {
 	}
 
 }, BTN, {edge:"falling", debounce:25, repeat:true});
+
+// Orientation detection using accelerometer
+function checkOrientation(measure) {
+	var newOrientation = null;
+	if (measure.acc.z > ORIENTATION_THRESHOLD) {
+		newOrientation = 'up'; // Right side up
+	} else if (measure.acc.z < -ORIENTATION_THRESHOLD) {
+		newOrientation = 'down'; // Upside down
+	}
+
+	// Only trigger if orientation changed and we have a clear reading
+	if (newOrientation && newOrientation !== currentOrientation) {
+		currentOrientation = newOrientation;
+		if (newOrientation === 'up') {
+			up();
+			LED1.reset();
+		} else if (newOrientation === 'down') {
+			down();
+			LED1.set();
+		}
+	}
+}
+
+// Check orientation
+require("puckjsv2-accel-tilt").on();
+Puck.on('accel', checkOrientation);
 
 Bluetooth.on('data', readState);
 
