@@ -144,7 +144,6 @@ setWatch(function() {
 }, BTN, {edge:"falling", debounce:25, repeat:true});
 
 // Orientation detection using accelerometer
-deltaLog = [];
 function checkOrientation(measure) {
 	var acc = measure.acc;
 	var currentTime = getTime() * 1000; // Convert to milliseconds
@@ -235,3 +234,5 @@ NRF.on('disconnect', function() {
 	LED2.reset();
 	LED3.reset();
 });
+
+save();
