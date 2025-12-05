@@ -45,7 +45,7 @@ function handleStateUpdate(stateLine) {
 		var actions = parts[3].split(",");
 
 		var index = seats.indexOf(PLAYER_SEAT);
-		LED3.write(actions[index] != "");
+		LED3.write(index >= 0 && actions[index] != "");
 		LED2.write(state == "pl" && seat == PLAYER_SEAT);
 	}
 }
