@@ -86,6 +86,10 @@ var directionChanges = 0;
 var lastDirection = {x: 0, y: 0, z: 0};
 var directionChangeStartTime = 0;
 
+// Orientation change delay variables
+var pendingOrientation = null;
+var orientationChangeTime = 0;
+
 // Button pressed down
 setWatch(function() {
 	isPressed = true;
@@ -204,16 +208,30 @@ function checkOrientation(measure) {
 		newOrientation = 'down'; // Upside down
 	}
 
-	// Only trigger if orientation changed and we have a clear reading
+	// Handle orientation changes with delay to avoid triggering during shakes
 	if (newOrientation && newOrientation !== currentOrientation) {
-		currentOrientation = newOrientation;
-		if (newOrientation === 'up') {
-			up();
-			//LED1.reset();
-		} else if (newOrientation === 'down') {
-			down();
-			//LED1.set();
+		// If this is a new orientation change, start the delay timer
+		if (pendingOrientation !== newOrientation) {
+			pendingOrientation = newOrientation;
+			orientationChangeTime = currentTime;
 		}
+		// If orientation has been stable for the delay period and no recent shake
+		else if ((currentTime - orientationChangeTime) >= SHAKE_TIME && 
+		         (currentTime - lastShakeTime) > SHAKE_COOLDOWN) {
+			currentOrientation = newOrientation;
+			pendingOrientation = null;
+			if (newOrientation === 'up') {
+				up();
+				//LED1.reset();
+			} else if (newOrientation === 'down') {
+				down();
+				//LED1.set();
+			}
+		}
+	}
+	// Reset pending orientation if we're back to neutral or different orientation
+	else if (pendingOrientation && (!newOrientation || newOrientation !== pendingOrientation)) {
+		pendingOrientation = null;
 	}
 }
 
