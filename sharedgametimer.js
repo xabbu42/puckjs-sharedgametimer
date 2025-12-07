@@ -1,3 +1,4 @@
+//var PLAYER_SEAT = 1 // couple with that PLAYER_SEAT
 var LONG_PRESS_TIME = 1000; // 1 second for long press
 var DOUBLE_CLICK_TIME = 300; // 300ms window for double click
 var ORIENTATION_THRESHOLD = 10000; // Threshold for Z-axis to determine orientation
@@ -24,13 +25,18 @@ var suggestions = {
 	actionMapName: "Puck.js Actions"
 };
 
-function single()  { Bluetooth.println('Single' ) }
-function long()    { Bluetooth.println('Long'   ) }
-function double()  { Bluetooth.println('Double' ) }
-function up()      { Bluetooth.println('Up'     ) }
-function down()    { Bluetooth.println('Down'   ) }
-function shake()   { Bluetooth.println('Shake'  ) }
-function poll()    { Bluetooth.println('Poll'   ) }
+function send(e) {
+	var send = e + ' #' + PLAYER_SEAT;
+	Bluetooth.println(send);
+}
+
+function single()  { send('Single' ) }
+function long()    { send('Long'   ) }
+function double()  { send('Double' ) }
+function up()      { send('Up'     ) }
+function down()    { send('Down'   ) }
+function shake()   { send('Shake'  ) }
+function poll()    { send('Poll'   ) }
 
 // Handle state updates
 function handleStateUpdate(stateLine) {
