@@ -16,8 +16,8 @@ var suggestions = {
 		['Single',  'remoteActionPrimary'],
 		['Double',  'remoteActionToggleAdmin'],
 		['Long',    'remoteActionSecondary'],
-		['Up',      'remoteActionTogglePause'],
-		['Down',    'remoteActionTogglePause'],
+		['Up',      'remoteActionUnPause'],
+		['Down',    'remoteActionPause'],
 		['Shake',   'remoteActionUndo'],
 		['Poll',    'remoteActionPoll']
 	],
