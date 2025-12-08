@@ -228,10 +228,8 @@ function checkOrientation(measure) {
 			pendingOrientation = null;
 			if (newOrientation === 'up') {
 				up();
-				//LED1.reset();
 			} else if (newOrientation === 'down') {
 				down();
-				//LED1.set();
 			}
 		}
 	}
