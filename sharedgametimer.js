@@ -25,8 +25,17 @@ var suggestions = {
 	actionMapName: "Puck.js Actions"
 };
 
+logs = [];
+function log(line) {
+	var time = (new Date()).toISOString();
+	logs.push({time,line});
+	if (logs.length > 20)
+		logs.shift();
+}
+
 function send(e) {
 	var send = e + ' #' + PLAYER_SEAT;
+	log(send);
 	Bluetooth.println(send);
 }
 
@@ -40,6 +49,7 @@ function poll()    { send('Poll'   ) }
 
 // Handle state updates
 function handleStateUpdate(stateLine) {
+	log(stateLine);
 	if (stateLine === "GET SETUP") {
 		Bluetooth.println(JSON.stringify(suggestions));
 		return;
