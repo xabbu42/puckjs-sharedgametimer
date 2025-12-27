@@ -1,4 +1,4 @@
-//var PLAYER_SEAT = 1 // couple with that PLAYER_SEAT
+var PLAYER_SEAT = ""; // Set to number as a string to couple with that PLAYER_SEAT
 var LONG_PRESS_TIME = 1000; // 1 second for long press
 var DOUBLE_CLICK_TIME = 300; // 300ms window for double click
 var ORIENTATION_THRESHOLD = 10000; // Threshold for Z-axis to determine orientation
@@ -34,7 +34,7 @@ function log(line) {
 }
 
 function send(e) {
-	var send = e + ' #' + PLAYER_SEAT;
+	var send = e + (PLAYER_SEAT ? ' #' + PLAYER_SEAT : '');
 	log(send);
 	Bluetooth.println(send);
 }
@@ -60,9 +60,11 @@ function handleStateUpdate(stateLine) {
 		var seats = parts[2].split(",");
 		var actions = parts[3].split(",");
 
-		var index = seats.indexOf(PLAYER_SEAT);
-		LED3.write(index >= 0 && actions[index] != "");
-		LED2.write(state == "pl" && seat == PLAYER_SEAT);
+		if (PLAYER_SEAT) {
+			var index = seats.indexOf(PLAYER_SEAT);
+			LED3.write(index >= 0 && actions[index] != "");
+			LED2.write(state == "pl" && seat == PLAYER_SEAT);
+		}
 	}
 }
 
