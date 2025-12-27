@@ -250,18 +250,19 @@ function checkOrientation(measure) {
 }
 
 // Check orientation
-require("puckjsv2-accel-movement").on();
 Puck.on('accel', checkOrientation);
 
 Bluetooth.on('data', readState);
 
 // Send configuration on Bluetooth connect
 NRF.on('connect', function(addr) {
+	require("puckjsv2-accel-movement").on()
 	LoopbackA.setConsole();
 	poll();
 });
 
 NRF.on('disconnect', function() {
+	require("puckjsv2-accel-movement").off()
 	LED1.reset();
 	LED2.reset();
 	LED3.reset();
