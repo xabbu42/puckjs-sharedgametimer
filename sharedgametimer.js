@@ -70,7 +70,7 @@ function handleStateUpdate(stateLine) {
 
 // Read from UART and process state
 var incompleteLineRead = '';
-function readState(data) {
+function onData(data) {
 	var lines = (incompleteLineRead + data).split("\n");
 	if (lines.length === 0) return;
 	var lastItem = lines.pop();
@@ -94,22 +94,7 @@ var pressCount = 0;
 var isPressed = false;
 var pressStartTime = 0;
 
-// Orientation detection variables
-var currentOrientation = null; // null, 'up', or 'down'
-
-// Shake detection variables
-var lastAccel = {x: 0, y: 0, z: 0};
-var lastShakeTime = 0;
-var directionChanges = 0;
-var lastDirection = {x: 0, y: 0, z: 0};
-var directionChangeStartTime = 0;
-
-// Orientation change delay variables
-var pendingOrientation = null;
-var orientationChangeTime = 0;
-
-// Button pressed down
-setWatch(function() {
+function onButtonDown() {
 	isPressed = true;
 	pressStartTime = getTime() * 1000; // Convert to milliseconds
 
@@ -127,10 +112,9 @@ setWatch(function() {
 		}
 	}, LONG_PRESS_TIME);
 
-}, BTN, {edge:"rising", debounce:25, repeat:true});
+}
 
-// Button released
-setWatch(function() {
+function onButtonUp() {
 	if (!isPressed) return; // Ignore if we weren't tracking a press
 
 	var pressDuration = (getTime() * 1000) - pressStartTime;
@@ -163,10 +147,24 @@ setWatch(function() {
 		}, DOUBLE_CLICK_TIME);
 	}
 
-}, BTN, {edge:"falling", debounce:25, repeat:true});
+}
 
-// Orientation detection using accelerometer
-function checkOrientation(measure) {
+// Orientation and Shake detection using accelerometer
+
+// Shake detection
+var lastAccel = {x: 0, y: 0, z: 0};
+var lastShakeTime = 0;
+var directionChanges = 0;
+var lastDirection = {x: 0, y: 0, z: 0};
+var directionChangeStartTime = 0;
+
+// Orientation detection
+var currentOrientation = null; // null, 'up', or 'down'
+var pendingOrientation = null;
+var orientationChangeTime = 0;
+
+
+function onAccel(measure) {
 	var acc = measure.acc;
 	var currentTime = getTime() * 1000; // Convert to milliseconds
 
@@ -251,12 +249,13 @@ function checkOrientation(measure) {
 	}
 }
 
-// Check orientation
-Puck.on('accel', checkOrientation);
+// Set callbacks
+Puck.on('accel', onAccel);
+setWatch(onButtonDown, BTN, {edge:"rising",  debounce:25, repeat:true});
+setWatch(onButtonUp,   BTN, {edge:"falling", debounce:25, repeat:true});
+Bluetooth.on('data', onData);
 
-Bluetooth.on('data', readState);
-
-// Send configuration on Bluetooth connect
+// Handle connections
 NRF.on('connect', function(addr) {
 	require("puckjsv2-accel-movement").on()
 	LoopbackA.setConsole();
