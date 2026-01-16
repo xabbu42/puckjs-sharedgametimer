@@ -6,7 +6,8 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
 		<script src="https://www.puck-js.com/puck.js"></script>
 		<script>
-			async function install() {
+			async function install(event) {
+				event.preventDefault();
 				const button = document.getElementById('button');
 				const name = document.getElementById('name').value;
 				const seat = document.getElementById('seat').value;
@@ -44,7 +45,7 @@
 				<form>
 					<label for="name">Name:</label> <input type="text" id="name" name="name" placeholder="Enter Device Name">
 					<label for="seat">Seat:</label> <input type="text" id="seat" name="seat" placeholder="Enter Device Seat Number">
-					<button id="button" onclick="install()">Install</button>
+					<button id="button" onclick="install(event)">Install</button>
 				</form>
 			</p>
 			<p>
