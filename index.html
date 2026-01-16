@@ -8,12 +8,17 @@
 		<script>
 			async function install() {
 				const button = document.getElementById('button');
+				const name = document.getElementById('name').value;
+				const seat = document.getElementById('seat').value;
 				try {
 					button.ariaBusy = "true";
-					const code   = await fetch("sharedgametimer.js").then(res => res.text());
-					const module = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
+					const code     = await fetch("sharedgametimer.js").then(res => res.text());
+					const module   = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
+					const settings = (seat ? "var PLAYER_SEAT = ${JSON.stringify(seat)};\n" : "") + (name ? "NRF.setAdvertising({},${JSON.stringify({name})});\n" : "");
 					await Puck.write("reset();\n");
 					await Puck.write("Modules.addCached(\"puckjsv2-accel-movement\"," + JSON.stringify(module) + ");\n");
+					if (settings)
+						await Puck.write(settings);
 					await Puck.write(code);
 					Puck.setTime();
 					Puck.close();
@@ -36,7 +41,11 @@
 			</p>
 			<p>
 				Or you can install it directly from here:
-				<form><button id="button" onclick="install()">Install</button></form>
+				<form>
+					<label for="name">Name:</label> <input type="text" id="name" name="name" placeholder="Enter Device Name">
+					<label for="seat">Seat:</label> <input type="text" id="seat" name="seat" placeholder="Enter Device Seat Number">
+					<button id="button" onclick="install()">Install</button>
+				</form>
 			</p>
 			<p>
 				After that you can connect your <a href="https://www.puck-js.com">Puck.js</a> to the <a href="https://sharedgametimer.com">sharedgametimer.com</a> using <a href="https://sharedgametimer.com/remote-control/bluetooth">Bluetooth LE</a>.
