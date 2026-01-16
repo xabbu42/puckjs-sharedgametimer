@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Puck.js remote for sharedgametimer.com</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+		<script src="https://www.puck-js.com/puck.js"></script>
+		<script>
+			async function install() {
+				const button = document.getElementById('button');
+				try {
+					button.ariaBusy = "true";
+					const code   = await fetch("sharedgametimer.js").then(res => res.text());
+					const module = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
+					await Puck.write("reset();\n");
+					await Puck.write("Modules.addCached(\"puckjsv2-accel-movement\"," + JSON.stringify(module) + ");\n");
+					await Puck.write(code);
+					Puck.setTime();
+					Puck.close();
+				} finally {
+					button.ariaBusy = "false";
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<main class="container">
+			<h1><a href="https://www.puck-js.com">Puck.js</a> remote for <a href="https://sharedgametimer.com">sharedgametimer.com</a></h1>
+			<p>
+				A script to use the <a href="https://www.puck-js.com">Puck.js Bluetooth Beacon</a> as a remote for <a href="https://sharedgametimer.com">sharedgametimer.com</a>.
+			</p>
+			<p>
+				You can download the <a href="sharedgametimer.js" download>script</a> and
+				install it using the <a href="https://www.espruino.com/ide/">Espruino Web IDE</a> or the <a href="https://www.npmjs.com/package/espruino">espruino command
+				line tool</a>.
+			</p>
+			<p>
+				Or you can install it directly from here:
+				<form><button id="button" onclick="install()">Install</button></form>
+			</p>
+			<p>
+				After that you can connect your <a href="https://www.puck-js.com">Puck.js</a> to the <a href="https://sharedgametimer.com">sharedgametimer.com</a> using <a href="https://sharedgametimer.com/remote-control/bluetooth">Bluetooth LE</a>.
+			</p>
+		</main>
+	</body>
+</html>
