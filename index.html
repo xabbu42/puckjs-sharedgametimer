@@ -8,11 +8,10 @@
 		<script>
 			async function install(event) {
 				event.preventDefault();
-				const button = document.getElementById('button');
 				const name = document.getElementById('name').value;
 				const seat = document.getElementById('seat').value;
 				try {
-					button.ariaBusy = "true";
+					event.target.ariaBusy = "true";
 					const code     = await fetch("sharedgametimer.js").then(res => res.text());
 					const module   = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
 					const settings = (seat ? `PLAYER_SEAT = ${JSON.stringify(seat)};\n` : "") + (name ? `NRF.setAdvertising({},${JSON.stringify({name})});\n` : "");
@@ -24,7 +23,7 @@
 					Puck.setTime();
 					Puck.close();
 				} finally {
-					button.ariaBusy = "false";
+					event.target.ariaBusy = "false";
 				}
 			}
 		</script>
@@ -43,9 +42,9 @@
 			<p>
 				Or you can install it directly from here:
 				<form>
-					<label for="name">Name:</label> <input type="text" id="name" name="name" placeholder="Enter Device Name">
-					<label for="seat">Seat:</label> <input type="text" id="seat" name="seat" placeholder="Enter Device Seat Number">
-					<button id="button" onclick="install(event)">Install</button>
+					<label for="name">Name:</label> <input type="text" id="name" placeholder="Enter Device Name">
+					<label for="seat">Seat:</label> <input type="text" id="seat" placeholder="Enter Device Seat Number">
+					<button onclick="install(event)">Install</button>
 				</form>
 			</p>
 			<p>
