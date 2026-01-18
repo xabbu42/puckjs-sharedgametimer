@@ -6,6 +6,7 @@ var SHAKE_THRESHOLD = 50000; // Threshold for detecting shake motion
 var SHAKE_COOLDOWN = 1000; // Minimum time between shake detections (ms)
 var SHAKE_COUNT = 3; // Number of direction changes needed for shake
 var SHAKE_TIME = 500; // Time window to count direction changes (ms)
+var MAG_THRESHOLD = 0; // Threshold for detecting a magnet
 
 var suggestions = {
 	script: [
@@ -46,6 +47,7 @@ function up()      { send('Up'     ) }
 function down()    { send('Down'   ) }
 function shake()   { send('Shake'  ) }
 function poll()    { send('Poll'   ) }
+function mag()     { send('Mag'    ) }
 
 // Handle state updates
 function handleStateUpdate(stateLine) {
@@ -248,6 +250,18 @@ function onAccel(measure) {
 		pendingOrientation = null;
 	}
 }
+
+// Magnet detection
+function onInit() {
+	if (MAG_THRESHOLD)
+		require("puckjsv2-mag-level").on({thresh:MAG_THRESHOLD});
+}
+Puck.on('field', function(m) {
+	if (m.state) {
+		mag();
+		//reset(); //enable for easy reset during devel
+	}
+});
 
 // Set callbacks
 Puck.on('accel', onAccel);
