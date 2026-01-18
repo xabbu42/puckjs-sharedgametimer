@@ -15,9 +15,9 @@
 					button.ariaBusy = "true";
 					const code     = await fetch("sharedgametimer.js").then(res => res.text());
 					const module   = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
-					const settings = (seat ? "var PLAYER_SEAT = ${JSON.stringify(seat)};\n" : "") + (name ? "NRF.setAdvertising({},${JSON.stringify({name})});\n" : "");
+					const settings = (seat ? `PLAYER_SEAT = ${JSON.stringify(seat)};\n` : "") + (name ? `NRF.setAdvertising({},${JSON.stringify({name})});\n` : "");
 					await Puck.write("reset();\n");
-					await Puck.write("Modules.addCached(\"puckjsv2-accel-movement\"," + JSON.stringify(module) + ");\n");
+					await Puck.write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(module)});\n`);
 					if (settings)
 						await Puck.write(settings);
 					await Puck.write(code);
