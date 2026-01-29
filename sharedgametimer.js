@@ -85,6 +85,7 @@ function onData(data) {
 		incompleteLineRead = lastItem;
 	}
 	if (incompleteLineRead == "\u0003") {
+		Bluetooth.removeListener('data', onData);
 		Bluetooth.setConsole();
 	}
 }
@@ -267,17 +268,18 @@ Puck.on('field', function(m) {
 Puck.on('accel', onAccel);
 setWatch(onButtonDown, BTN, {edge:"rising",  debounce:25, repeat:true});
 setWatch(onButtonUp,   BTN, {edge:"falling", debounce:25, repeat:true});
-Bluetooth.on('data', onData);
 
 // Handle connections
 NRF.on('connect', function(addr) {
 	require("puckjsv2-accel-movement").on()
 	LoopbackA.setConsole();
+	Bluetooth.on('data', onData);
 	poll();
 });
 
 NRF.on('disconnect', function() {
 	require("puckjsv2-accel-movement").off()
+	Bluetooth.removeListener('data', onData);
 	LED1.reset();
 	LED2.reset();
 	LED3.reset();
