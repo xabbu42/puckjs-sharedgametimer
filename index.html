@@ -12,7 +12,7 @@
 				const seat = document.getElementById('seat').value;
 				try {
 					event.target.ariaBusy = "true";
-					const code      = await fetch("sharedgametimer.js?c=1").then(res => res.text());
+					const code      = await fetch("app.js").then(res => res.text());
 					const moduleacc = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
 					const modulemag = await fetch("https://www.espruino.com/modules/puckjsv2-mag-level.min.js").then(res => res.text());
 					const settings  = (seat ? `PLAYER_SEAT = ${JSON.stringify(seat)};\n` : "") + (name ? `NRF.setAdvertising({},${JSON.stringify({name})});\n` : "");
