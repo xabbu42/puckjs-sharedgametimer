@@ -46,9 +46,11 @@
 			<p>
 				Or you can install it directly from here:
 				<form>
-					<label for="name">Name:</label> <input type="text" id="name" placeholder="Enter Device Name">
-					<label for="seat">Seat:</label> <input type="text" id="seat" placeholder="Enter Device Seat Number">
-					<button onclick="install(event)">Install</button>
+					<div class="grid">
+						<div><label for="name">Name:</label><input type="text" id="name" placeholder="Device Name"></div>
+						<div><label for="seat">Seat:</label><input type="text" id="seat" placeholder="Device Seat Number"></div>
+						<div><label>&nbsp;</label><button onclick="install(event)">Install</button></div>
+					</div>
 				</form>
 			</p>
 			<p>
