@@ -54,8 +54,16 @@
 				Or you can install it directly from here:
 				<form>
 					<div class="grid">
-						<div><label for="name">Name:</label><input type="text" id="name" placeholder="Device Name"></div>
-						<div><label for="seat">Seat:</label><input type="text" id="seat" placeholder="Device Seat Number"></div>
+						<div>
+							<label for="name">Name (optional):</label>
+							<input type="text" id="name" placeholder="e.g., Player 1">
+							<small>Custom Bluetooth device name</small>
+						</div>
+						<div>
+							<label for="seat">Seat (optional):</label>
+							<input type="text" id="seat" placeholder="e.g., 1, 2, 3...">
+							<small>Send commands for a specific seat</small>
+						</div>
 						<div><label>&nbsp;</label><button onclick="install(event)">Install</button></div>
 					</div>
 				</form>
