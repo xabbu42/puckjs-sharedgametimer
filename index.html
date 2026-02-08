@@ -13,14 +13,18 @@
 
 			async function install(event) {
 				event.preventDefault();
-				const name = document.getElementById('name').value;
-				const seat = document.getElementById('seat').value;
+				const name = document.getElementById('name');
+				const seat = document.getElementById('seat');
+				const button = event.target;
 				try {
-					event.target.ariaBusy = "true";
+					button.ariaBusy = true;
+					button.disabled = true;
+					name.disabled = true;
+					seat.disabled = true;
 					const code      = await fetch("app.js").then(res => res.text());
 					const moduleacc = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
 					const modulemag = await fetch("https://www.espruino.com/modules/puckjsv2-mag-level.min.js").then(res => res.text());
-					const settings  = (seat ? `PLAYER_SEAT = ${JSON.stringify(seat)};\n` : "") + (name ? `NRF.setAdvertising({},${JSON.stringify({name})});\n` : "");
+					const settings  = (seat.value ? `PLAYER_SEAT = ${JSON.stringify(seat.value)};\n` : "") + (name.value ? `NRF.setAdvertising({},${JSON.stringify({name: name.value})});\n` : "");
 					await write("\n\u0003"); //reset to console
 					await write("reset();\n");
 					await write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(moduleacc)});\n`);
@@ -32,7 +36,10 @@
 					Puck.close();
 					alert("Installation successful! Your Puck.js is now ready to use as a remote for sharedgametimer.com");
 				} finally {
-					event.target.ariaBusy = "false";
+					button.ariaBusy = false;
+					button.disabled = false;
+					name.disabled = false;
+					seat.disabled = false;
 				}
 			}
 		</script>
