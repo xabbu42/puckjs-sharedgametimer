@@ -6,6 +6,11 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
 		<script src="https://www.puck-js.com/puck.js"></script>
 		<script>
+			async function write(data) {
+				if (!(await Puck.write(data)))
+					throw new Error("Error writing to Puck.js");
+			}
+
 			async function install(event) {
 				event.preventDefault();
 				const name = document.getElementById('name').value;
@@ -16,19 +21,16 @@
 					const moduleacc = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
 					const modulemag = await fetch("https://www.espruino.com/modules/puckjsv2-mag-level.min.js").then(res => res.text());
 					const settings  = (seat ? `PLAYER_SEAT = ${JSON.stringify(seat)};\n` : "") + (name ? `NRF.setAdvertising({},${JSON.stringify({name})});\n` : "");
-					const connected = await Puck.write("\n\u0003"); //reset to console
-					if (connected) {
-						await Puck.write("reset();\n");
-						await Puck.write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(moduleacc)});\n`);
-						await Puck.write(`Modules.addCached("puckjsv2-mag-level", ${JSON.stringify(modulemag)});\n`);
-						await Puck.write(code + "\n");
-						if (settings)
-							await Puck.write(settings);
-						Puck.setTime();
-						await Puck.write("save();\n");
-						Puck.close();
-						alert("Installation successful! Your Puck.js is now ready to use as a remote for sharedgametimer.com");
-					}
+					await write("\n\u0003"); //reset to console
+					await write("reset();\n");
+					await write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(moduleacc)});\n`);
+					await write(`Modules.addCached("puckjsv2-mag-level", ${JSON.stringify(modulemag)});\n`);
+					await write(code + "\n");
+					if (settings) await write(settings);
+					Puck.setTime();
+					await write("save();\n");
+					Puck.close();
+					alert("Installation successful! Your Puck.js is now ready to use as a remote for sharedgametimer.com");
 				} finally {
 					event.target.ariaBusy = "false";
 				}
