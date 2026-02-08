@@ -16,16 +16,18 @@
 					const moduleacc = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
 					const modulemag = await fetch("https://www.espruino.com/modules/puckjsv2-mag-level.min.js").then(res => res.text());
 					const settings  = (seat ? `PLAYER_SEAT = ${JSON.stringify(seat)};\n` : "") + (name ? `NRF.setAdvertising({},${JSON.stringify({name})});\n` : "");
-					await Puck.write("\n\u0003"); //reset to console
-					await Puck.write("reset();\n");
-					await Puck.write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(moduleacc)});\n`);
-					await Puck.write(`Modules.addCached("puckjsv2-mag-level", ${JSON.stringify(modulemag)});\n`);
-					await Puck.write(code + "\n");
-					if (settings)
-						await Puck.write(settings);
-					Puck.setTime();
-					await Puck.write("save();\n");
-					Puck.close();
+					const connected = await Puck.write("\n\u0003"); //reset to console
+					if (connected) {
+						await Puck.write("reset();\n");
+						await Puck.write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(moduleacc)});\n`);
+						await Puck.write(`Modules.addCached("puckjsv2-mag-level", ${JSON.stringify(modulemag)});\n`);
+						await Puck.write(code + "\n");
+						if (settings)
+							await Puck.write(settings);
+						Puck.setTime();
+						await Puck.write("save();\n");
+						Puck.close();
+					}
 				} finally {
 					event.target.ariaBusy = "false";
 				}
