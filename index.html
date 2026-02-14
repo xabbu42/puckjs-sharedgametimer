@@ -52,35 +52,58 @@
 			</nav>
 		</header>
 		<main class="container">
-			<p>
-				A script to use the <a href="https://www.puck-js.com">Puck.js Bluetooth Beacon</a> as a remote for <a href="https://sharedgametimer.com">sharedgametimer.com</a>.
-			</p>
-			<p>
-				You can download the <a href="app.js" download="puckjs-sharedgametimer.js">script</a> and
-				install it using the <a href="https://www.espruino.com/ide/">Espruino Web IDE</a> or the <a href="https://www.npmjs.com/package/espruino">espruino command
-				line tool</a>.
-			</p>
-			<p>
-				Or you can install it directly from here:
+			<section>
+				Transform your <a href="https://www.puck-js.com">Puck.js Bluetooth Beacon</a> into a wireless remote control for <a href="https://sharedgametimer.com">sharedgametimer.com</a>.
+			</section>
+
+			<section>
+				<h2>Features</h2>
+				<ul>
+					<li><strong>Button Controls:</strong> Single press, long press, and double press detection</li>
+					<li><strong>Motion Detection:</strong> Shake gesture and orientation changes</li>
+					<li><strong>Multi-Player Support:</strong> Configure specific seat assignments</li>
+					<li><strong>Led Feedback:</strong> Show active player and active buttons</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>Installation</h2>
+				<p>
+					<strong>Option 1:</strong> Download the <a href="app.js" download="puckjs-sharedgametimer.js">script file</a> and
+					install it manually using the <a href="https://www.espruino.com/ide/">Espruino Web IDE</a> or the <a href="https://www.npmjs.com/package/espruino">espruino command line tool</a>.
+				</p>
+				<p>
+					<strong>Option 2:</strong> Install directly from this page using the form below:
+				</p>
 				<form>
 					<div class="grid">
 						<div>
-							<label for="name">Name (optional):</label>
-							<input type="text" id="name" placeholder="e.g., Player 1">
-							<small>Custom Bluetooth device name</small>
+							<label for="name">Device Name (optional):</label>
+							<input type="text" id="name" placeholder="e.g., Player 1, Game Remote">
+							<small>Custom Bluetooth device name for easy identification</small>
 						</div>
 						<div>
-							<label for="seat">Seat (optional):</label>
-							<input type="text" id="seat" placeholder="e.g., 1, 2, 3...">
-							<small>Send commands for a specific seat</small>
+							<label for="seat">Player Seat (optional):</label>
+							<input type="text" id="seat" placeholder="e.g., 1, 2, 3, A, B">
+							<small>Assign commands to a specific player seat</small>
 						</div>
-						<div><label>&nbsp;</label><button onclick="install(event)">Install</button></div>
+						<div><label>&nbsp;</label><button onclick="install(event)">Install to Puck.js</button></div>
 					</div>
 				</form>
-			</p>
-			<p>
-				After that you can connect your <a href="https://www.puck-js.com">Puck.js</a> to the <a href="https://sharedgametimer.com">sharedgametimer.com</a> using <a href="https://sharedgametimer.com/remote-control/bluetooth">Bluetooth LE</a>.
-			</p>
+			</section>
+
+			<section>
+				<h2>How to Use</h2>
+				<ol>
+					<li>Install the script to your Puck.js using one of the methods above</li>
+					<li>Visit <a href="https://sharedgametimer.com">sharedgametimer.com</a> and start or join a game session</li>
+					<li>Connect your Puck.js via <a href="https://sharedgametimer.com/remote-control/bluetooth">Bluetooth LE</a></li>
+					<li>Use button presses and gestures to control the game timer</li>
+				</ol>
+				<p>
+					<strong>Note:</strong> Make sure your browser supports Web Bluetooth and that Bluetooth is enabled on your device.
+				</p>
+			</section>
 		</main>
 	</body>
 </html>
