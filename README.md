@@ -2,6 +2,8 @@
 
 Transform your [Puck.js Bluetooth Beacon](https://www.puck-js.com) into a wireless remote control for [sharedgametimer.com](https://sharedgametimer.com).
 
+Video: https://xabbu42.github.io/puckjs-sharedgametimer/video.mp4
+
 ## Features
 
 - **Button Controls:** Single press, long press, and double press detection
