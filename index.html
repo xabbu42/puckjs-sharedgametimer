@@ -11,7 +11,31 @@
 					throw new Error("Error writing to Puck.js");
 			}
 
-			async function install(event) {
+			async function installApp(event) {
+				event.preventDefault();
+				const button = event.target;
+				try {
+					button.ariaBusy = true;
+					button.disabled = true;
+					const code      = await fetch("app.js").then(res => res.text());
+					const moduleacc = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
+					const modulemag = await fetch("https://www.espruino.com/modules/puckjsv2-mag-level.min.js").then(res => res.text());
+					await write("\n\u0003"); //reset to console
+					await write("reset();\n");
+					await write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(moduleacc)});\n`);
+					await write(`Modules.addCached("puckjsv2-mag-level", ${JSON.stringify(modulemag)});\n`);
+					await write(code + "\n");
+					Puck.setTime();
+					await write("save();\n");
+					Puck.close();
+					alert("App installation successful! Your Puck.js now has the remote control app installed.");
+				} finally {
+					button.ariaBusy = false;
+					button.disabled = false;
+				}
+			}
+
+			async function updateSettings(event) {
 				event.preventDefault();
 				const name = document.getElementById('name');
 				const seat = document.getElementById('seat');
@@ -21,26 +45,20 @@
 					button.disabled = true;
 					name.disabled = true;
 					seat.disabled = true;
-					const code      = await fetch("app.js").then(res => res.text());
-					const moduleacc = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
-					const modulemag = await fetch("https://www.espruino.com/modules/puckjsv2-mag-level.min.js").then(res => res.text());
-					const settings  = {};
+					const settings = {};
 					if (name.value)
 						settings.DEVICE_NAME = name.value;
 					if (seat.value)
 						settings.PLAYER_SEAT = seat.value;
 					await write("\n\u0003"); //reset to console
-					await write("reset();\n");
-					await write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(moduleacc)});\n`);
-					await write(`Modules.addCached("puckjsv2-mag-level", ${JSON.stringify(modulemag)});\n`);
 					if (Object.keys(settings).length > 0) {
 						await write(`require("Storage").write("settings.json",'${JSON.stringify(settings)}');\n`);
+					} else {
+						await write(`require("Storage").erase("settings.json");\n`);
 					}
-					await write(code + "\n");
-					Puck.setTime();
-					await write("save();\n");
+					await write("load();\n");
 					Puck.close();
-					alert("Installation successful! Your Puck.js is now ready to use as a remote for sharedgametimer.com");
+					alert("Settings updated successfully! Your Puck.js will use the new configuration.");
 				} finally {
 					button.ariaBusy = false;
 					button.disabled = false;
@@ -84,8 +102,17 @@
 					install it manually using the <a href="https://www.espruino.com/ide/">Espruino Web IDE</a> or the <a href="https://www.npmjs.com/package/espruino">espruino command line tool</a>.
 				</p>
 				<p>
-					<strong>Option 2:</strong> Install directly from this page using the form below:
+					<strong>Option 2:</strong> Install directly from this page using the forms below:
 				</p>
+				
+				<h3>Step 1: Install App</h3>
+				<p>First, install the remote control app to your Puck.js:</p>
+				<form>
+					<button onclick="installApp(event)">Install App to Puck.js</button>
+				</form>
+				
+				<h3>Step 2: Configure Settings (Optional)</h3>
+				<p>Customize your device name and player seat assignment:</p>
 				<form>
 					<div class="grid">
 						<div>
@@ -98,7 +125,7 @@
 							<input type="text" id="seat" placeholder="e.g., 1, 2, 3">
 							<small>Assign commands to a specific player seat</small>
 						</div>
-						<div><label>&nbsp;</label><button onclick="install(event)">Install to Puck.js</button></div>
+						<div><label>&nbsp;</label><button onclick="updateSettings(event)">Update Settings</button></div>
 					</div>
 				</form>
 			</section>
