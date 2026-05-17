@@ -1,7 +1,5 @@
-var settings = require("Storage").readJSON("settings.json", true) || {};
-
-var DEVICE_NAME = settings.DEVICE_NAME || ""; // Alternative name of device
-var PLAYER_SEAT = settings.PLAYER_SEAT || ""; // Set to number as a string to couple with that PLAYER_SEAT
+var DEVICE_NAME = "";              // Alternative name of device
+var PLAYER_SEAT = "";              // Set to number as a string to couple with that PLAYER_SEAT
 var LONG_PRESS_TIME = 1000;        // 1 second for long press
 var DOUBLE_CLICK_TIME = 300;       // 300ms window for double click
 var ORIENTATION_THRESHOLD = 10000; // Threshold for Z-axis to determine orientation
@@ -263,6 +261,9 @@ function onAccel(measure) {
 function onInit() {
 	if (MAG_THRESHOLD)
 		require("puckjsv2-mag-level").on({thresh:MAG_THRESHOLD});
+	let settings = require("Storage").readJSON("settings.json", true) || {};
+	DEVICE_NAME = settings.DEVICE_NAME || "";
+	PLAYER_SEAT = settings.PLAYER_SEAT || "";
 }
 Puck.on('field', function(m) {
 	if (m.state) {
