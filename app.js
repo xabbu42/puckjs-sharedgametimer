@@ -1,4 +1,7 @@
-var PLAYER_SEAT = "";              // Set to number as a string to couple with that PLAYER_SEAT
+var settings = require("Storage").readJSON("settings.json", true) || {};
+
+var DEVICE_NAME = settings.DEVICE_NAME || ""; // Alternative name of device
+var PLAYER_SEAT = settings.PLAYER_SEAT || ""; // Set to number as a string to couple with that PLAYER_SEAT
 var LONG_PRESS_TIME = 1000;        // 1 second for long press
 var DOUBLE_CLICK_TIME = 300;       // 300ms window for double click
 var ORIENTATION_THRESHOLD = 10000; // Threshold for Z-axis to determine orientation
@@ -7,6 +10,10 @@ var SHAKE_COOLDOWN = 1000;         // Minimum time between shake detections (ms)
 var SHAKE_COUNT = 3;               // Number of direction changes needed for shake
 var SHAKE_TIME = 500;              // Time window to count direction changes (ms)
 var MAG_THRESHOLD = 0;             // Threshold for detecting a magnet
+
+if (DEVICE_NAME) {
+	NRF.setAdvertising({},{name: DEVICE_NAME});
+}
 
 var suggestions = {
 	script: [

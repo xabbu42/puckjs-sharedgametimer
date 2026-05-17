@@ -24,13 +24,19 @@
 					const code      = await fetch("app.js").then(res => res.text());
 					const moduleacc = await fetch("https://www.espruino.com/modules/puckjsv2-accel-movement.min.js").then(res => res.text());
 					const modulemag = await fetch("https://www.espruino.com/modules/puckjsv2-mag-level.min.js").then(res => res.text());
-					const settings  = (seat.value ? `PLAYER_SEAT = ${JSON.stringify(seat.value)};\n` : "") + (name.value ? `NRF.setAdvertising({},${JSON.stringify({name: name.value})});\n` : "");
+					const settings  = {};
+					if (name.value)
+						settings.DEVICE_NAME = name.value;
+					if (seat.value)
+						settings.PLAYER_SEAT = seat.value;
 					await write("\n\u0003"); //reset to console
 					await write("reset();\n");
 					await write(`Modules.addCached("puckjsv2-accel-movement", ${JSON.stringify(moduleacc)});\n`);
 					await write(`Modules.addCached("puckjsv2-mag-level", ${JSON.stringify(modulemag)});\n`);
+					if (Object.keys(settings).length > 0) {
+						await write(`require("Storage").write("settings.json",'${JSON.stringify(settings)}');\n`);
+					}
 					await write(code + "\n");
-					if (settings) await write(settings);
 					Puck.setTime();
 					await write("save();\n");
 					Puck.close();
