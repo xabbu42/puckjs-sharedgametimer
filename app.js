@@ -9,10 +9,6 @@ var SHAKE_COUNT = 3;               // Number of direction changes needed for sha
 var SHAKE_TIME = 500;              // Time window to count direction changes (ms)
 var MAG_THRESHOLD = 0;             // Threshold for detecting a magnet
 
-if (DEVICE_NAME) {
-	NRF.setAdvertising({},{name: DEVICE_NAME});
-}
-
 var suggestions = {
 	script: [
 	    '0 sgtState;sgtSeat;sgtPlayerSeats;sgtPlayerActions%0A'
@@ -263,7 +259,11 @@ function onInit() {
 		require("puckjsv2-mag-level").on({thresh:MAG_THRESHOLD});
 	let settings = require("Storage").readJSON("settings.json", true) || {};
 	DEVICE_NAME = settings.DEVICE_NAME || "";
+	if (DEVICE_NAME)
+		NRF.setAdvertising({},{name: DEVICE_NAME});
 	PLAYER_SEAT = settings.PLAYER_SEAT || "";
+}
+
 }
 Puck.on('field', function(m) {
 	if (m.state) {
