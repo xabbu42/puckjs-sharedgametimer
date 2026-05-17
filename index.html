@@ -26,7 +26,6 @@
 					await write(`Modules.addCached("puckjsv2-mag-level", ${JSON.stringify(modulemag)});\n`);
 					await write(code + "\n");
 					Puck.setTime();
-					await write("save();\n");
 					Puck.close();
 					alert("App installation successful! Your Puck.js now has the remote control app installed.");
 				} finally {

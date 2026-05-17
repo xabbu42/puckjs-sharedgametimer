@@ -292,3 +292,5 @@ NRF.on('disconnect', function() {
 	LED2.reset();
 	LED3.reset();
 });
+
+save();
